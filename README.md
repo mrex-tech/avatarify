@@ -17,7 +17,8 @@ Based on [First Order Motion Model](https://github.com/AliaksandrSiarohin/first-
 Created by: GitHub community.
 
 ## News
-- **22 May 2020.** Added [Google Colab](https://colab.research.google.com/github/alievk/avatarify/blob/master/avatarify.ipynb) mode. Now you can running Avatarify on any computer without GPU!
+- **11 July 2020.** Added Docker support. Now you can run Avatarify from Docker on [Linux](#docker). Thanks to [mikaelhg](https://github.com/mikaelhg) and [mintmaker](https://github.com/mintmaker) for contribution!
+- **22 May 2020.** Added [Google Colab](https://colab.research.google.com/github/alievk/avatarify/blob/master/avatarify.ipynb) mode. Now you can run Avatarify on any computer without GPU!
 - **7 May 2020.** Added remote GPU support for all platforms (based on [mynameisfiber's](https://github.com/mynameisfiber) solution). [Demo](https://youtu.be/3Dz_bUIPYFM). Deployment [instructions](https://github.com/alievk/avatarify/wiki/Remote-GPU). 
 - **24 April 2020.** Added Windows installation [tutorial](https://www.youtube.com/watch?v=lym9ANVb120).
 - **17 April 2020.** Created Slack community. Please join via [invitation link](https://join.slack.com/t/avatarify/shared_invite/zt-dyoqy8tc-~4U2ObQ6WoxuwSaWKKVOgg).
@@ -32,6 +33,7 @@ Created by: GitHub community.
     - [Mac](#mac)
     - [Windows](#windows)
     - [Remote GPU](#remote-gpu)
+    - [Docker](#docker)
 - [Setup avatars](#setup-avatars)
 - [Run](#run)
     - [Linux](#linux-1)
@@ -87,6 +89,7 @@ bash scripts/install.sh
 ```
 3. [Download network weights](#download-network-weights) and place `vox-adv-cpk.pth.tar` file in the `avatarify` directory (don't unpack it).
 
+
 #### Mac
 *(!) Note*: we found out that in versions after [v4.6.8 (March 23, 2020)](https://zoom.us/client/4.6.19178.0323/ZoomInstaller.pkg) Zoom disabled support for virtual cameras on Mac. To use Avatarify in Zoom you can choose from 2 options:
 - Install [Zoom v4.6.8](https://zoom.us/client/4.6.19178.0323/ZoomInstaller.pkg) which is the last version that supports virtual cameras
@@ -137,8 +140,24 @@ The steps 10-11 are required only once during setup.
 
 #### Remote GPU
 
-You can offload the heavy work to [Google Colab](https://colab.research.google.com/github/alievk/avatarify/blob/master/avatarify.ipynb) or a [server with a GPU](https://github.com/alievk/avatarify/wiki/Remote-GPU) and use your laptop just to communicate the video stream.
+You can offload the heavy work to [Google Colab](https://colab.research.google.com/github/alievk/avatarify/blob/master/avatarify.ipynb) or a [server with a GPU](https://github.com/alievk/avatarify/wiki/Remote-GPU) and use your laptop just to communicate the video stream. The server and client software are native and dockerized available.
 
+### Docker
+Docker images are only availabe on Linux.
+
+1. Install Docker following the [Documentation](https://docs.docker.com/engine/install/). Then run this [step](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) to make docker available for your user.
+2. For using the gpu (hardly recommended): Install nvidia drivers and [nvidia docker](https://github.com/NVIDIA/nvidia-docker#quickstart).
+3. Clone `avatarify` and install its dependencies (v4l2loopback kernel module):
+```bash
+git clone https://github.com/alievk/avatarify.git
+cd avatarify
+bash scripts/install_docker.sh
+```
+4. Build the Dockerfile:
+```bash
+cd avatarify
+docker build -t avatarify .
+```
 ## Setup avatars
 Avatarify comes with a standard set of avatars of famous people, but you can extend this set simply copying your avatars into `avatars` folder.
 
@@ -162,6 +181,7 @@ Run:
 ```bash
 bash run.sh
 ```
+If you haven't installed a GPU add the `--no-gpus` flag. In order to use Docker add the `--docker` flag.
 
 `cam` and `avatarify` windows will pop-up. The `cam` window is for controlling your face position and `avatarify` is for the avatar animation preview. Please follow these [recommendations](#driving-your-avatar) to drive your avatars.
 
